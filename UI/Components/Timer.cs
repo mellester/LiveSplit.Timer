@@ -24,7 +24,7 @@ namespace LiveSplit.UI.Components
         public Color TimerColor = Color.Transparent;
 
         protected TimeAccuracy CurrentAccuracy { get; set; }
-        protected TimeFormat CurrentTimeFormat { get; set; }
+        protected DigitsFormat CurrentTimeFormat { get; set; }
 
         public GraphicsCache Cache { get; set; }
 
@@ -80,7 +80,7 @@ namespace LiveSplit.UI.Components
             TimerColor = Color.Transparent;
         }
 
-        public static void DrawBackground(Graphics g, Color timerColor, Color settingsColor1, Color settingsColor2, 
+        public static void DrawBackground(Graphics g, Color timerColor, Color settingsColor1, Color settingsColor2,
             float width, float height, DeltasGradientType gradientType)
         {
             var background1 = settingsColor1;
@@ -216,14 +216,15 @@ namespace LiveSplit.UI.Components
 
         protected void UpdateTimeFormat()
         {
-            if (Settings.DigitsFormat == "1")
-                CurrentTimeFormat = TimeFormat.Seconds;
-            else if (Settings.DigitsFormat == "00:01")
-                CurrentTimeFormat = TimeFormat.Minutes;
-            else if (Settings.DigitsFormat == "0:00:01")
-                CurrentTimeFormat = TimeFormat.Hours;
-            else
-                CurrentTimeFormat = TimeFormat.TenHours;
+                CurrentTimeFormat = DigitsFormat.DoubleDigitHours;
+            foreach (var keyValuePair in FormatUtils.StringsDict)
+            {
+                if (keyValuePair.Value == Settings.DigitsFormat)
+                {
+                    CurrentTimeFormat = keyValuePair.Key;
+                    break;
+                }
+            }
 
             if (Settings.Accuracy == ".23")
                 CurrentAccuracy = TimeAccuracy.Hundredths;
@@ -284,15 +285,21 @@ namespace LiveSplit.UI.Components
 
             if (timeValue != null)
             {
-                var timeString = Formatter.Format(timeValue, CurrentTimeFormat);
+                Formatter.DigitsFormat = CurrentTimeFormat;
+                var timeString = Formatter.Format(timeValue);
                 int dotIndex = timeString.IndexOf(".");
-                BigTextLabel.Text = timeString.Substring(0, dotIndex);
-                if (CurrentAccuracy == TimeAccuracy.Hundredths)
-                    SmallTextLabel.Text = timeString.Substring(dotIndex);
-                else if (CurrentAccuracy == TimeAccuracy.Tenths)
-                    SmallTextLabel.Text = timeString.Substring(dotIndex, 2);
+                if (dotIndex == -1)
+                    BigTextLabel.Text = timeString;
                 else
-                    SmallTextLabel.Text = "";
+                {
+                    BigTextLabel.Text = timeString.Substring(0, dotIndex);
+                    if (CurrentAccuracy == TimeAccuracy.Hundredths)
+                        SmallTextLabel.Text = timeString.Substring(dotIndex);
+                    else if (CurrentAccuracy == TimeAccuracy.Tenths)
+                        SmallTextLabel.Text = timeString.Substring(dotIndex, 2);
+                    else
+                        SmallTextLabel.Text = "";
+                }
             }
             else
             {

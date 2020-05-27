@@ -300,11 +300,6 @@
             this.tableLayoutPanel1.SetColumnSpan(this.cmbDigitsFormat, 3);
             this.cmbDigitsFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDigitsFormat.FormattingEnabled = true;
-            this.cmbDigitsFormat.Items.AddRange(new object[] {
-            "1",
-            "00:01",
-            "0:00:01",
-            "00:00:01"});
             this.cmbDigitsFormat.Location = new System.Drawing.Point(160, 232);
             this.cmbDigitsFormat.Name = "cmbDigitsFormat";
             this.cmbDigitsFormat.RightToLeft = System.Windows.Forms.RightToLeft.Yes;

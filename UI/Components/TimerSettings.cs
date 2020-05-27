@@ -1,6 +1,7 @@
 ﻿using LiveSplit.TimeFormatters;
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -86,6 +87,7 @@ namespace LiveSplit.UI.Components
             trkDecimalsSize.DataBindings.Add("Value", this, "DecimalsSize", false, DataSourceUpdateMode.OnPropertyChanged);
             cmbDigitsFormat.DataBindings.Add("SelectedItem", this, "DigitsFormat", false, DataSourceUpdateMode.OnPropertyChanged);
             cmbAccuracy.DataBindings.Add("SelectedItem", this, "Accuracy", false, DataSourceUpdateMode.OnPropertyChanged);
+            cmbDigitsFormat.Items.AddRange(FormatUtils.StringsDict.Values.ToArray());
         }
 
         void cmbTimerFormat_SelectedIndexChanged(object sender, EventArgs e)
